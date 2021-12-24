@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?><process version="9.10.001">
+  <context>
+    <input/>
+    <output/>
+    <macros/>
+  </context>
+  <operator activated="true" class="process" compatibility="9.10.001" expanded="true" name="Process">
+    <parameter key="logverbosity" value="init"/>
+    <parameter key="random_seed" value="2001"/>
+    <parameter key="send_mail" value="never"/>
+    <parameter key="notification_email" value=""/>
+    <parameter key="process_duration_for_mail" value="30"/>
+    <parameter key="encoding" value="SYSTEM"/>
+    <process expanded="true">
+      <operator activated="true" class="subprocess" compatibility="9.10.001" expanded="true" height="82" name="Preprocess" width="90" x="112" y="34">
+        <process expanded="true">
+          <operator activated="true" class="retrieve" compatibility="9.10.001" expanded="true" height="68" name="Retrieve airline-passenger-satisfaction" width="90" x="45" y="34">
+            <parameter key="repository_entry" value="../data/airline-passenger-satisfaction-test"/>
+          </operator>
+          <operator activated="true" class="retrieve" compatibility="9.10.001" expanded="true" height="68" name="Retrieve airline-passenger-satisfaction-test" width="90" x="45" y="136">
+            <parameter key="repository_entry" value="../data/airline-passenger-satisfaction-test"/>
+          </operator>
+          <operator activated="true" class="union" compatibility="9.10.001" expanded="true" height="82" name="Union" width="90" x="179" y="34"/>
+          <operator activated="true" class="filter_examples" compatibility="9.10.001" expanded="true" height="103" name="Filter Examples" width="90" x="313" y="34">
+            <parameter key="parameter_expression" value=""/>
+            <parameter key="condition_class" value="custom_filters"/>
+            <parameter key="invert_filter" value="false"/>
+            <list key="filters_list">
+              <parameter key="filters_entry_key" value="Arrival Delay in Minutes.ne.?"/>
+            </list>
+            <parameter key="filters_logic_and" value="true"/>
+            <parameter key="filters_check_metadata" value="true"/>
+          </operator>
+          <operator activated="true" class="select_attributes" compatibility="9.10.001" expanded="true" height="82" name="Select Attributes" width="90" x="447" y="34">
+            <parameter key="attribute_filter_type" value="subset"/>
+            <parameter key="attribute" value="att1"/>
+            <parameter key="attributes" value="|att1|id"/>
+            <parameter key="use_except_expression" value="false"/>
+            <parameter key="value_type" value="attribute_value"/>
+            <parameter key="use_value_type_exception" value="false"/>
+            <parameter key="except_value_type" value="time"/>
+            <parameter key="block_type" value="attribute_block"/>
+            <parameter key="use_block_type_exception" value="false"/>
+            <parameter key="except_block_type" value="value_matrix_row_start"/>
+            <parameter key="invert_selection" value="true"/>
+            <parameter key="include_special_attributes" value="false"/>
+          </operator>
+          <operator activated="true" class="nominal_to_numerical" compatibility="9.10.001" expanded="true" height="103" name="Nominal to Numerical" width="90" x="581" y="34">
+            <parameter key="return_preprocessing_model" value="false"/>
+            <parameter key="create_view" value="false"/>
+            <parameter key="attribute_filter_type" value="subset"/>
+            <parameter key="attribute" value=""/>
+            <parameter key="attributes" value="Class|Customer Type|Gender|Type of Travel"/>
+            <parameter key="use_except_expression" value="false"/>
+            <parameter key="value_type" value="nominal"/>
+            <parameter key="use_value_type_exception" value="false"/>
+            <parameter key="except_value_type" value="file_path"/>
+            <parameter key="block_type" value="single_value"/>
+            <parameter key="use_block_type_exception" value="false"/>
+            <parameter key="except_block_type" value="single_value"/>
+            <parameter key="invert_selection" value="false"/>
+            <parameter key="include_special_attributes" value="false"/>
+            <parameter key="coding_type" value="dummy coding"/>
+            <parameter key="use_comparison_groups" value="false"/>
+            <list key="comparison_groups"/>
+            <parameter key="unexpected_value_handling" value="all 0 and warning"/>
+            <parameter key="use_underscore_in_name" value="false"/>
+          </operator>
+          <operator activated="true" class="normalize" compatibility="9.10.001" expanded="true" height="103" name="Normalize" width="90" x="715" y="34">
+            <parameter key="return_preprocessing_model" value="false"/>
+            <parameter key="create_view" value="false"/>
+            <parameter key="attribute_filter_type" value="all"/>
+            <parameter key="attribute" value=""/>
+            <parameter key="attributes" value=""/>
+            <parameter key="use_except_expression" value="false"/>
+            <parameter key="value_type" value="numeric"/>
+            <parameter key="use_value_type_exception" value="false"/>
+            <parameter key="except_value_type" value="real"/>
+            <parameter key="block_type" value="value_series"/>
+            <parameter key="use_block_type_exception" value="false"/>
+            <parameter key="except_block_type" value="value_series_end"/>
+            <parameter key="invert_selection" value="false"/>
+            <parameter key="include_special_attributes" value="false"/>
+            <parameter key="method" value="range transformation"/>
+            <parameter key="min" value="0.0"/>
+            <parameter key="max" value="1.0"/>
+            <parameter key="allow_negative_values" value="false"/>
+          </operator>
+          <operator activated="true" class="replace_missing_values" compatibility="9.10.001" expanded="true" height="103" name="Replace Missing Values" width="90" x="849" y="34">
+            <parameter key="return_preprocessing_model" value="false"/>
+            <parameter key="create_view" value="false"/>
+            <parameter key="attribute_filter_type" value="all"/>
+            <parameter key="attribute" value=""/>
+            <parameter key="attributes" value=""/>
+            <parameter key="use_except_expression" value="false"/>
+            <parameter key="value_type" value="attribute_value"/>
+            <parameter key="use_value_type_exception" value="false"/>
+            <parameter key="except_value_type" value="time"/>
+            <parameter key="block_type" value="attribute_block"/>
+            <parameter key="use_block_type_exception" value="false"/>
+            <parameter key="except_block_type" value="value_matrix_row_start"/>
+            <parameter key="invert_selection" value="false"/>
+            <parameter key="include_special_attributes" value="false"/>
+            <parameter key="default" value="none"/>
+            <list key="columns"/>
+          </operator>
+          <connect from_op="Retrieve airline-passenger-satisfaction" from_port="output" to_op="Union" to_port="example set 1"/>
+          <connect from_op="Retrieve airline-passenger-satisfaction-test" from_port="output" to_op="Union" to_port="example set 2"/>
+          <connect from_op="Union" from_port="union" to_op="Filter Examples" to_port="example set input"/>
+          <connect from_op="Filter Examples" from_port="example set output" to_op="Select Attributes" to_port="example set input"/>
+          <connect from_op="Select Attributes" from_port="example set output" to_op="Nominal to Numerical" to_port="example set input"/>
+          <connect from_op="Nominal to Numerical" from_port="example set output" to_op="Normalize" to_port="example set input"/>
+          <connect from_op="Normalize" from_port="example set output" to_op="Replace Missing Values" to_port="example set input"/>
+          <connect from_op="Replace Missing Values" from_port="example set output" to_port="out 1"/>
+          <portSpacing port="source_in 1" spacing="0"/>
+          <portSpacing port="sink_out 1" spacing="0"/>
+          <portSpacing port="sink_out 2" spacing="0"/>
+        </process>
+      </operator>
+      <operator activated="true" class="sample" compatibility="9.10.001" expanded="true" height="82" name="Sample" width="90" x="246" y="34">
+        <parameter key="sample" value="absolute"/>
+        <parameter key="balance_data" value="false"/>
+        <parameter key="sample_size" value="10000"/>
+        <parameter key="sample_ratio" value="0.1"/>
+        <parameter key="sample_probability" value="0.1"/>
+        <list key="sample_size_per_class"/>
+        <list key="sample_ratio_per_class"/>
+        <list key="sample_probability_per_class"/>
+        <parameter key="use_local_random_seed" value="true"/>
+        <parameter key="local_random_seed" value="1"/>
+      </operator>
+      <operator activated="true" class="split_data" compatibility="9.10.001" expanded="true" height="103" name="Split Data" width="90" x="380" y="34">
+        <enumeration key="partitions">
+          <parameter key="ratio" value="0.8"/>
+          <parameter key="ratio" value="0.2"/>
+        </enumeration>
+        <parameter key="sampling_type" value="automatic"/>
+        <parameter key="use_local_random_seed" value="false"/>
+        <parameter key="local_random_seed" value="1992"/>
+      </operator>
+      <operator activated="true" class="write_csv" compatibility="9.10.001" expanded="true" height="82" name="Write CSV (2)" width="90" x="514" y="136">
+        <parameter key="csv_file" value="D:/TU/CS/CS345/Project/Plane/airplane_classification_preprocess_test.csv"/>
+        <parameter key="column_separator" value=";"/>
+        <parameter key="write_attribute_names" value="true"/>
+        <parameter key="quote_nominal_values" value="true"/>
+        <parameter key="format_date_attributes" value="true"/>
+        <parameter key="date_format" value="yyyy-MM-dd HH:mm:ss"/>
+        <parameter key="append_to_file" value="false"/>
+        <parameter key="encoding" value="SYSTEM"/>
+      </operator>
+      <operator activated="true" class="write_csv" compatibility="9.10.001" expanded="true" height="82" name="Write CSV" width="90" x="514" y="34">
+        <parameter key="csv_file" value="D:/TU/CS/CS345/Project/Plane/airplane_classification_preprocess_train.csv"/>
+        <parameter key="column_separator" value=";"/>
+        <parameter key="write_attribute_names" value="true"/>
+        <parameter key="quote_nominal_values" value="true"/>
+        <parameter key="format_date_attributes" value="true"/>
+        <parameter key="date_format" value="yyyy-MM-dd HH:mm:ss"/>
+        <parameter key="append_to_file" value="false"/>
+        <parameter key="encoding" value="SYSTEM"/>
+      </operator>
+      <connect from_op="Preprocess" from_port="out 1" to_op="Sample" to_port="example set input"/>
+      <connect from_op="Sample" from_port="example set output" to_op="Split Data" to_port="example set"/>
+      <connect from_op="Split Data" from_port="partition 1" to_op="Write CSV" to_port="input"/>
+      <connect from_op="Split Data" from_port="partition 2" to_op="Write CSV (2)" to_port="input"/>
+      <connect from_op="Write CSV (2)" from_port="through" to_port="result 2"/>
+      <connect from_op="Write CSV" from_port="through" to_port="result 1"/>
+      <portSpacing port="source_input 1" spacing="0"/>
+      <portSpacing port="sink_result 1" spacing="0"/>
+      <portSpacing port="sink_result 2" spacing="0"/>
+      <portSpacing port="sink_result 3" spacing="0"/>
+    </process>
+  </operator>
+</process>
